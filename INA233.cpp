@@ -307,7 +307,7 @@ float INA233::getAv_Power_mW(){
 */
 /**************************************************************************/
 float INA233::getShuntVoltage_mV(){
-  uint16_t value = getShuntVoltage_raw();
+  int16_t value = getShuntVoltage_raw();
   float vshunt;
   vshunt = (value*pow(10,-R_vs)-b_vs)/m_vs;
   return vshunt * 1000;
@@ -319,7 +319,7 @@ float INA233::getShuntVoltage_mV(){
 */
 /**************************************************************************/
 float INA233::getBusVoltage_V(){
-  uint16_t value = getBusVoltageIn_raw();
+  int16_t value = getBusVoltageIn_raw();
   float vbus;
   vbus = (value*pow(10,-R_vb)-b_vb)/m_vb;
   return vbus;
@@ -332,7 +332,7 @@ float INA233::getBusVoltage_V(){
 */
 /**************************************************************************/
 float INA233::getCurrent_mA(){
-  uint16_t value = getCurrentIn_raw();
+  int16_t value = getCurrentIn_raw();
   float current;
   current = (value*pow(10,-R_c)-b_c)/m_c;
   return current*1000;
@@ -345,7 +345,7 @@ float INA233::getCurrent_mA(){
 */
 /**************************************************************************/
 float INA233::getPower_mW(){
-  uint16_t value = getPower_raw();
+  int16_t value = getPower_raw();
   float power;
   power = (value*pow(10,-R_p)-b_p)/m_p;
   return power*1000;
