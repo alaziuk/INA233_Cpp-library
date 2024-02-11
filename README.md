@@ -1,45 +1,55 @@
-infinityPV INA233 Arduino Library
-========================================
+# INA233 C++ Library
 
-![LiBAT5V2A](https://github.com/infinityPV/infinityPV_INA233_Arduino-library/blob/master/extras/libat5v2a-ardu-solar-cell.jpg)
+## Overview
 
-[*LiBAT5V2A Multiplatform *](https://infinitypv.com/products/electronics/libat5v2a) 
+This library is fork from **[infinityPV_INA233_Arduino-library](https://github.com/infinityPV/infinityPV_INA233_Arduino-library). It was repurposed for general C++ usage. This C++ library provides functionality to interface with the TI INA233 current/power monitor. The library facilitates communication with the device over the I2C bus, reads and writes data, and performs calibration and scaling as per the specifications outlined in section 7.5.2 of the TI INA233 datasheet.
 
 
-This is an Arduino IDE library for monitoring V/I and energy at different points in the infinityPV LiBAT5V2A evaluation board
-through the INA233 ADCs on board. However, you can use the library for your own designs including INA233 ADCs :).  
+## Features
 
-Repository Contents
--------------------
+- **I2C Communication**: Establishes communication with the INA233 over the I2C bus.
+- **Register Read/Write**: Reads and writes 16-bit words to specific registers on the INA233.
+- **Calibration and Scaling**: Implements calibration and scaling functions as per TI INA233 datasheet.
+- **Raw Measurements**: Retrieves raw values for bus voltage, shunt voltage, current, power, and energy.
+- **Processed Measurements**: Provides processed measurements for voltage, current, power, and average power in appropriate units.
 
-* **/examples** - Example sketches for the library (.ino). Run these from the Arduino IDE. 
-* **/extras** - Additional documentation for the user. These files are ignored by the IDE. 
-* Source files for the library (.cpp, .h). 
-* **library.properties** - General library properties for the Arduino package manager. 
+## Repository Contents
 
-Documentation
---------------
-* **[LiBAT5V2A Brochure](https://infinitypv.com/brochures/LiBAT5V2A%20Brochure%20V2.pdf)** - Short description for the LiBAT5V2A evaluation board. 
-* **[LiBAT5V2A Application Note](https://infinitypv.com/application_notes/LiBAT5V2A_applicationnoteV2.0.pdf)** - Application Note for the LiBAT52A evaluation board. Here you can find where are place the INA233 ADCs and how to configure the shunt resistors to get highest accuracy mesuring current for your application. 
+* Source files for the library (.cpp, .h).
+
+## Documentation
+
 * **[INA233 datasheet](http://www.ti.com/lit/ds/symlink/ina233.pdf)** - INA233 ADC/I2C datasheet from Texas Instruments.
 
-Product Versions
-----------------
-* [LiBAT5V2A Energy Management Shield](https://infinitypv.com/products/electronics/libat5v2a)- Boost converter from Li batteries to 5V/2A including INA233 for energy monitoring and TPS27081A as controlled power switch for smart supply. 
+## How to Use
+
+1. **Include the Library**: Include the INA233.h header file in your project.
+2. **Instantiate INA233 Object**: Create an INA233 object with the desired I2C bus and device address.
+3. **Calibrate the Device**: Use the `calibrate` function to calibrate the INA233 for accurate measurements.
+4. **Read Measurements**: Utilize the provided functions to obtain raw and processed measurements from the INA233.
+
+## Dependencies
+
+- `iostream`: C++ Standard I/O Library
+- `fcntl.h`: File Control Library
+- `linux/i2c-dev.h`: Linux I2C Device Access Library
+- `i2c/smbus.h`: I2C SMBus Protocol Library
+- `sys/ioctl.h`: Input/Output Control Library
+- `unistd.h`: Standard Symbolic Constants and Types Library
+- `cmath`: C++ Standard Mathematical Functions Library
 
 Version History
 ---------------
-* [V1.0](https://github.com/infinityPV/infinityPV_INA233_Arduino-library/releases/tag/V1.0) - Release V1.0
 
 
-License Information
--------------------
+## License
 
 This product is _**open source**_! 
 
-Please review the license.txt file for license information. 
-
-If you have any questions or concerns on licensing, please contact info@infinitypv.com.
+Please review the [license.txt](license.txt) file for license information. 
 
 Distributed as-is; no warranty is given.
 
+## Version History
+
+- **v1.0 (Feb 2024)**: Initial release.
