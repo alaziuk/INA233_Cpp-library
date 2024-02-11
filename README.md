@@ -2,7 +2,7 @@
 
 ## Overview
 
-This library is fork from **[infinityPV_INA233_Arduino-library](https://github.com/infinityPV/infinityPV_INA233_Arduino-library). It was repurposed for general C++ usage. This C++ library provides functionality to interface with the TI INA233 current/power monitor. The library facilitates communication with the device over the I2C bus, reads and writes data, and performs calibration and scaling as per the specifications outlined in section 7.5.2 of the TI INA233 datasheet.
+This library is fork from [infinityPV_INA233_Arduino-library](https://github.com/infinityPV/infinityPV_INA233_Arduino-library). It was repurposed for general C++ usage. This C++ library provides functionality to interface with the TI INA233 current/power monitor. The library facilitates communication with the device over the I2C bus, reads and writes data, and performs calibration and scaling as per the specifications outlined in section 7.5.2 of the TI INA233 datasheet.
 
 
 ## Features
