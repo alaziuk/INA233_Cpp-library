@@ -64,7 +64,8 @@ INA233::~INA233(){
 */
 /**************************************************************************/
 int INA233::write_word_data(int fd, uint8_t reg, uint16_t data){
-    int result = i2c_smbus_write_word_data(fd, reg, data);
+    char charReg = (char) reg;
+    int result = i2c_smbus_write_word_data(fd, charReg, data);
     if (result <  0 && errno != EOPNOTSUPP) {
         // Handle the error, i2c_smbus_write_word_data returns -1 on failure
         // errno is set to the error number
@@ -123,8 +124,8 @@ void INA233::calibrate(double R_shunt, double I_max){
         }
     }
 
-    double m_c_F = 1 / Current_LSB;
-    double m_p_F = 1 / Power_LSB;
+    m_c_F = 1 / Current_LSB;
+    m_p_F = 1 / Power_LSB;
 
     // Calculate m and R for maximum accuracy in current measurement
     aux = static_cast<int32_t>(m_c_F);

@@ -1,0 +1,1 @@
+add_library(INA233_Cpp-library INA233.cpp)
