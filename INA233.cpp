@@ -1,24 +1,11 @@
-/**************************************************************************/
-/*!
-  @file     INA233.cpp
-  @author   alaziuk (WUThrust)
-	@license  BSD (see license.txt)
-
-
-  (*)This libray is protected by BSD license, Copyright (c) 2018, infinityPV ApS
-  All rights reserved
-	@section  HISTORY
-
-    v1.0  - Initial release Feb 2024
-*/
-/**************************************************************************/
-
 /* Includes */
 
 #include <iostream>
 #include <fcntl.h>
-#include <linux/i2c-dev.h>
-#include <i2c/smbus.h>
+extern "C"{
+    #include<linux/i2c-dev.h>
+    #include <i2c/smbus.h>
+}
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <cmath>
