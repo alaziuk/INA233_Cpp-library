@@ -1,17 +1,3 @@
-/**************************************************************************/
-/*!
-  @file     INA233.h
-  @author   alaziuk (WUThrust)
-	@license  BSD (see license.txt)
-
-
-  (*)This libray is protected by BSD license, Copyright (c) 2018, infinityPV ApS
-  All rights reserved
-	@section  HISTORY
-
-    v1.0  - Initial release Feb 2024
-*/
-/**************************************************************************/
 #ifndef INA233_h
 #define INA233_h
 
