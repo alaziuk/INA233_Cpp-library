@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <fcntl.h>
-extern "C"{
+/*extern "C"{
     #include<linux/i2c-dev.h>
     #include <i2c/smbus.h>
-}
+}*/
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <cmath>
@@ -18,63 +18,59 @@ extern "C"{
     @brief Instantiates a new INA233 class
 */
 /**************************************************************************/
-INA233::INA233(int bus, uint8_t address) : bus(bus), address(address){
-    char filename[20];
-    snprintf(filename,  19, "/dev/i2c-%d", bus);
-
-    // Open the I2C bus
-    file = open(filename, O_RDWR);
-    if (file <  0) {
-        std::cerr << "Failed to open the I2C bus" << '\n';
-        exit(1);
-    }
-
-    // Set the I2C slave address
-    if (ioctl(file, I2C_SLAVE, address) <  0) {
-        std::cerr << "Failed to acquire bus access and/or talk to slave" << '\n';
-        exit(1);
-    }
-}
+INA233::INA233(int bus, uint8_t address = INA233_ADDRESS_40) : bus(bus), address(address){}
 
 /**************************************************************************/
 /*!
     @brief Destructor of the class INA233.
 */
 /**************************************************************************/
-INA233::~INA233(){
-    close(file);
-}
+INA233::~INA233(){}
 
 /**************************************************************************/
 /*!
     @brief Writes a 16-bit word to a register on the INA233.
 */
 /**************************************************************************/
-int INA233::write_word_data(int fd, uint8_t reg, uint16_t data){
-    char charReg = (char) reg;
-    int result = i2c_smbus_write_word_data(fd, charReg, data);
-    if (result <  0 && errno != EOPNOTSUPP) {
-        // Handle the error, i2c_smbus_write_word_data returns -1 on failure
-        // errno is set to the error number
-        perror("Error in write_word_data");
+int INA233::write_word_data(uint8_t reg, uint16_t data) {
+    char command[64];
+    sprintf(command, "i2cset -y %d %#x %#x %#x", bus, address, reg, data);
+    int result = system(command);
+    if (result !=  0) {
+        // Handle the error
+        perror("Failed to write word data to the I2C bus");
     }
     return result;
 }
+
 
 /**************************************************************************/
 /*!
     @brief Reads a 16-bit word to a register on the INA233.
 */
 /**************************************************************************/
-int16_t INA233::read_word_data(uint8_t reg){
-    int result = i2c_smbus_read_word_data(file, reg);
-    if (result <  0 && errno != EOPNOTSUPP) {
-        // Handle the error, i2c_smbus_write_word_data returns -1 on failure
-        // errno is set to the error number
-        perror("Error in read_word_data");
+int16_t INA233::read_word_data(uint8_t reg) {
+    char command[64];
+    sprintf(command, "i2cget -y %d %#x %#x", bus, address, reg);
+    FILE* pipe = popen(command, "r");
+    if (!pipe) {
+        // Handle the error
+        std::cerr << "Failed to read word data from the I2C bus" << '\n';
+        return -1;
     }
-    return static_cast<int16_t>(result);
+
+    int16_t result;
+    if (fscanf(pipe, "0x%hx", &result) !=  1) {
+        // Handle the error
+        std::cerr << "Failed to read word data from the I2C bus" << '\n';
+        pclose(pipe);
+        return -1;
+    }
+
+    pclose(pipe);
+    return result;
 }
+
 
 /**************************************************************************/
 /*!
@@ -105,7 +101,7 @@ void INA233::calibrate(double R_shunt, double I_max){
         ERROR = 1;
     }else{
         ERROR = 0;  
-        int result = write_word_data(file, MFR_CALIBRATION, static_cast<uint16_t>(CAL));
+        int result = write_word_data(MFR_CALIBRATION, static_cast<uint16_t>(CAL));
         if (result < 0) {
             std::cerr << "Failed to write to the I2C bus" << '\n';
         }
@@ -175,7 +171,7 @@ void INA233::calibrate(double R_shunt, double I_max){
 /**************************************************************************/
 int16_t INA233::getBusVoltageIn_raw(){
     uint16_t value;
-    value = i2c_smbus_read_word_data(file, READ_VIN);
+    value = read_word_data(READ_VIN);
 
     return static_cast<int16_t>(value);
 }
@@ -188,7 +184,7 @@ int16_t INA233::getBusVoltageIn_raw(){
 /**************************************************************************/
 int16_t INA233::getBusVoltageOut_raw(){
     uint16_t value;
-    value = i2c_smbus_read_word_data(file, READ_VOUT);
+    value = read_word_data(READ_VOUT);
 
     return static_cast<int16_t>(value);
 }
@@ -201,7 +197,7 @@ int16_t INA233::getBusVoltageOut_raw(){
 /**************************************************************************/
 int16_t INA233::getShuntVoltage_raw(){
   uint16_t value;
-  value = i2c_smbus_read_word_data(file, MFR_READ_VSHUNT);
+  value = read_word_data(MFR_READ_VSHUNT);
 
   return static_cast<int16_t>(value);   
 }
@@ -214,7 +210,7 @@ int16_t INA233::getShuntVoltage_raw(){
 /**************************************************************************/
 int16_t INA233::getCurrentIn_raw(){
   uint16_t value;
-  value = i2c_smbus_read_word_data(file, READ_IIN);
+  value = read_word_data(READ_IIN);
 
   return static_cast<int16_t>(value);  
 }
@@ -227,7 +223,7 @@ int16_t INA233::getCurrentIn_raw(){
 /**************************************************************************/
 int16_t INA233::getCurrentOut_raw(){
   uint16_t value;
-  value = i2c_smbus_read_word_data(file, READ_IOUT);
+  value = read_word_data(READ_IOUT);
 
   return static_cast<int16_t>(value);  
 }
@@ -240,7 +236,7 @@ int16_t INA233::getCurrentOut_raw(){
 /**************************************************************************/
 int16_t INA233::getPower_raw(){
   uint16_t value;
-  value = i2c_smbus_read_word_data(file, READ_PIN);
+  value = read_word_data(READ_PIN);
 
   return static_cast<int16_t>(value);  
 }
@@ -258,7 +254,7 @@ void INA233::getEnergy_raw(uint16_t* accumulator, uint8_t* roll_over, uint32_t* 
 
     // Read the six bytes starting from the READ_EIN register
     for(int i =  0; i <  6; ++i){
-        value[i] = i2c_smbus_read_byte_data(file, READ_EIN + i);
+        value[i] = read_word_data(READ_EIN + i);
     }
 
     // Combine the read bytes to form the accumulator, roll_over, and sample_count

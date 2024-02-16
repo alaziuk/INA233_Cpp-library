@@ -98,7 +98,7 @@ class INA233 {
      float getPower_mW();
 
     private:
-     int write_word_data(int fd, uint8_t reg, uint16_t data);
+     int write_word_data(uint8_t reg, uint16_t data);
      int16_t read_word_data(uint8_t reg); //Might not be used
      int bus;
      uint8_t address;
