@@ -18,7 +18,10 @@
     @brief Instantiates a new INA233 class
 */
 /**************************************************************************/
-INA233::INA233(int bus, uint8_t address = INA233_ADDRESS_40) : bus(bus), address(address){}
+INA233::INA233(int bus, uint8_t address){
+    this->bus = bus;
+    this->address = address;
+}
 
 /**************************************************************************/
 /*!
